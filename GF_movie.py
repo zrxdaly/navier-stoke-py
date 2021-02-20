@@ -47,23 +47,25 @@ y = np.arange(1,31,1)
 #%%
 def quiver2D(p_store, u_store, v_store, case_txt, x, y, nt, dt, fps):
     X, Y = np.meshgrid(x, y) 
-    fig, ax = plt.subplots(figsize=(8, 6.4), dpi=300)
+    fig, ax = plt.subplots(figsize=(12, 2), dpi=300)
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     con = ax.contourf(X, Y, p_store[0,:,:], cmap=cm.viridis)
     fig.colorbar(con)
-    qax = ax.quiver(x[::5], y[::s5], u_store[0,::5,::5], v_store[0,::5,::5])
+    x_dim = 20
+    y_dim = 5
+    qax = ax.quiver(x[::x_dim], y[::y_dim], u_store[0,::y_dim,::x_dim], v_store[0,::y_dim,::x_dim])
     fig.tight_layout()
 
     def animate(i):
         con = ax.contourf(X, Y, p_store[i,:,:], cmap=cm.viridis)
-        qax = ax.quiver(x[::5], y[::5], u_store[i,::5,::5], v_store[i,::5,::5])
+        qax = ax.quiver(x[::x_dim], y[::y_dim], u_store[i,::y_dim,::x_dim], v_store[i,::y_dim,::x_dim])
         plt.title(r'$%s$ t = %.5f sec' % (case_txt, i * dt))
 
     anim = FuncAnimation(fig, animate, frames=np.linspace(0, len(p_store[0,...]), nt).astype(int), interval=1)
     anim.save('%s.mp4'%case_txt, dpi=300, fps=10, extra_args=['-vcodec', 'libx264'])
 
-quiver2D(b_tyx, u_tyx, w_tyx, "wall full R", x, y, 100, 4, int(len(b_tyx[0,...])/100))
+quiver2D(b_tyx, u_tyx, w_tyx, "wall full R", x, y, 285, 4, int(len(b_tyx[0,...])/100))
 
 
 # %%
